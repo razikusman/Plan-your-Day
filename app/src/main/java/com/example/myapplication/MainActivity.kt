@@ -53,14 +53,6 @@ class MainActivity : ComponentActivity() {
                         showSplash = false
                     })
                 } else {
-//                    Scaffold(
-//                        modifier = Modifier.fillMaxSize(),
-//                        containerColor = Color.White, // Set background color here
-//                        content = { innerPadding ->
-//                            // Use Padding to make sure content is properly aligned
-//                            Greeting(msg, Modifier.padding(innerPadding))
-//                        }
-//                    )
                     SideNav()
                 }
             }
