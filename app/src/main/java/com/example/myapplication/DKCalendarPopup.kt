@@ -16,7 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import com.example.myapplication.MyCalendar
+import com.example.myapplication.MyCalendarForm
 import java.text.DateFormatSymbols
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -61,7 +61,7 @@ fun DKCalendarPopup(
                 )
             }
 
-            MyCalendar(
+            MyCalendarForm(
                 month,
                 year,
                 ENTRIES_KEY,
