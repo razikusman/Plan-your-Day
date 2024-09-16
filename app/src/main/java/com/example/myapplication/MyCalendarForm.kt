@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -16,7 +17,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,20 +26,20 @@ import androidx.compose.ui.unit.dp
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import getMonthInteger
+import getYearInInt
 import kotlinx.serialization.Serializable
 
 val Context.dataStore by preferencesDataStore(name = "myCalander")
 
 @SuppressLint("RememberReturnType")
 @Composable
-fun MyCalendar(
-    date : String,
+fun MyCalendarForm(
+    month: String,
+    year: String = "2024",
     ENTRIES_KEY: Preferences.Key<String>,
     dataStore: DataStore<Preferences>
 ) {
-//    val context = LocalContext.current
-//    val dataStore = remember { context.dataStore }
-//    var entries by remember { mutableStateOf(listOf<Entry>()) }
 
     var calenderViewModel = MyCalenderViewModel(ds = dataStore);
 
@@ -48,118 +48,144 @@ fun MyCalendar(
     var number by remember { mutableStateOf(TextFieldValue("")) }
     var editIndex by remember { mutableIntStateOf(-1) }
     var total by remember { mutableIntStateOf(0) }
-
+    var selectedDate by remember { mutableStateOf("") }
 
     val entries by calenderViewModel.loadEntry(ENTRIES_KEY).collectAsState(initial = null);
     var allEntries = entries
 
-    if (allEntries != null) {
-        total = allEntries.filter { e -> e.date == date }.sumOf { e -> e.number.toInt() }
+    if (allEntries != null && selectedDate != "") {
+        total = allEntries.filter { e -> e.date == selectedDate }.sumOf { e -> e.number.toInt() }
     }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(16.dp) // Space between elements
     ) {
+        val date : DKDatePickerResponse = DKDatePicker(
+            getMonthInteger(month),
+            getYearInInt(year)
+        )
+        selectedDate = date.date;
         Text(
-            text = "Add Your Expense",
-            style = MaterialTheme.typography.titleLarge,
+            text = "Selected Date: $selectedDate",
+            style = MaterialTheme.typography.bodyLarge,
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
-
+        // Title Text Field
         OutlinedTextField(
             value = title,
             onValueChange = { title = it },
             label = { Text("Title") },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(60.dp)
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
-
+        // Description Text Field
         OutlinedTextField(
             value = description,
             onValueChange = { description = it },
             label = { Text("Description") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(60.dp)
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
-
+        // Amount Text Field
         OutlinedTextField(
             value = number,
             onValueChange = { number = it },
-            label = { Text("Number") },
-            modifier = Modifier.fillMaxWidth()
+            label = { Text("Amount") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(60.dp)
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Button(
-                onClick =
-                {
-                    if (editIndex >= 0) {
-                        val updatedEntries = allEntries?.toMutableList()
-                        updatedEntries?.set(
-                            editIndex,
-                            Entry(title.text, description.text, number.text, date)
-                        )
-                        allEntries = updatedEntries
-                        editIndex = -1
-                    } else {
-
-                        if(allEntries !=null) {
-                            var newENtry = Entry(title.text,description.text,number.text, date)
-                            allEntries = allEntries!!.plus(newENtry);
-                        }
-                        else{
-                            allEntries = listOf(Entry(title.text,description.text,number.text, date))
-                        }
-//                        total += number.text.toIntOrNull() ?: 0 bringme
-                    }
-
-                    title = TextFieldValue("")
-                    description = TextFieldValue("")
-                    number = TextFieldValue("")
-
-                    calenderViewModel.saveEntry(allEntries!!, ENTRIES_KEY)
-                },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.secondary
-                )
-            ) {
-                Text(text = if (editIndex >= 0) "Update Entry" else "Add Entry")
-
+        Column {
+            if (selectedDate == "") {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = "Select a Date",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = Color.Red
+                    )
+                    Icon(
+                        Icons.Outlined.Info,
+                        contentDescription = "Info Icon",
+                        tint = Color.Red
+                    )
+                }
             }
 
-            Spacer(modifier = Modifier.weight(0.2f))
-
-            VerticalDivider(
-                color = Color.Black,
-                thickness = 2.dp,
-                modifier = Modifier.height(40.dp)
-            )
-
-            Spacer(modifier = Modifier.weight(1f))
-
+            // Row for Add/Edit Button and Total Display
             Row(
-                horizontalArrangement = Arrangement.spacedBy(4.dp) // Space between $ and total value
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Text(
-                    text = "$",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = Color.Black
-                )
+                // Add/Edit Button
+                Button(
+                    onClick =
+                    {
+                        if (editIndex >= 0) {
+                            val updatedEntries = allEntries?.toMutableList()
+                            updatedEntries?.set(
+                                editIndex,
+                                Entry(title.text, description.text, number.text, selectedDate)
+                            )
+                            allEntries = updatedEntries
+                            editIndex = -1
+                        } else {
+                            if (allEntries != null) {
+                                val newEntry =
+                                    Entry(title.text, description.text, number.text, selectedDate)
+                                allEntries = allEntries!!.plus(newEntry)
+                            } else {
+                                allEntries = listOf(
+                                    Entry(
+                                        title.text,
+                                        description.text,
+                                        number.text,
+                                        selectedDate
+                                    )
+                                )
+                            }
+                        }
 
-                Text(
-                    text = "$total /=",
-                    style = MaterialTheme.typography.titleLarge
-                )
+                        title = TextFieldValue("")
+                        description = TextFieldValue("")
+                        number = TextFieldValue("")
+
+                        calenderViewModel.saveEntry(allEntries!!, ENTRIES_KEY)
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.secondary
+                    ),
+                    enabled = selectedDate.isNotEmpty()
+                ) {
+                    Text(text = if (editIndex >= 0) "Update Entry" else "Add Entry")
+                }
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                // Total Display
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(4.dp) // Space between $ and total value
+                ) {
+                    Text(
+                        text = "$",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = Color.Black
+                    )
+
+                    Text(
+                        text = "$total /=",
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                }
             }
         }
 
@@ -180,7 +206,7 @@ fun MyCalendar(
                 .fillMaxWidth()
         ) {
             itemsIndexed(allEntries ?: emptyList()) { index, entry ->
-                if(entry.date == date) {
+                if(entry.date == selectedDate) {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -204,6 +230,7 @@ fun MyCalendar(
                                     description = TextFieldValue(entry.description)
                                     number = TextFieldValue(entry.number)
                                     editIndex = index
+                                    selectedDate = entry.date
                                 }) {
                                     Icon(
                                         imageVector = Icons.Default.Edit,
@@ -272,8 +299,6 @@ fun MyCalendar(
         }
     }
 }
-
-
 
 @Serializable
 data class Entry(val title: String, val description: String, val number: String, val date: String)

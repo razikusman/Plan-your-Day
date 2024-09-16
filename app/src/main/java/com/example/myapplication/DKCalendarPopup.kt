@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -15,7 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import com.example.myapplication.MyCalendar
+import com.example.myapplication.MyCalendarForm
 import java.text.DateFormatSymbols
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -24,7 +25,8 @@ import java.util.Locale
 //
 @Composable
 fun DKCalendarPopup(
-    date: String,
+    month: String,
+    year : String = "2024",
     dataStore: DataStore<Preferences>,
     ENTRIES_KEY: Preferences.Key<String>,
     onClose: () -> Unit
@@ -35,6 +37,15 @@ fun DKCalendarPopup(
             .background(Color.White),
         shape = MaterialTheme.shapes.medium
     ) {
+        IconButton(
+            onClick = onClose
+        ) {
+            Icon(
+                imageVector = Icons.Default.Info,
+                contentDescription = "View this month expenses"
+            )
+        }
+
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
@@ -50,8 +61,9 @@ fun DKCalendarPopup(
                 )
             }
 
-            MyCalendar(
-                date,
+            MyCalendarForm(
+                month,
+                year,
                 ENTRIES_KEY,
                 dataStore)
         }
@@ -86,4 +98,9 @@ fun getMonthInteger(monthName: String) : Int{
 
 fun getYearInInt(year : String) : Int{
     return year.toInt();
+}
+
+fun formatDate(date: Date, format: String): String {
+    val dateFormat = SimpleDateFormat(format, Locale.getDefault())
+    return dateFormat.format(date)
 }

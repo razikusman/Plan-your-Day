@@ -106,23 +106,15 @@ fun ExpandablePanel(
                     Text(
                         text = "Expense for this month = ${total}/=",
                         style = MaterialTheme.typography.titleMedium,
-                        color = Color.White
                     );
                 }
                 else{
                     Text(
                         text = "Expense for this month = 0/=",
                         style = MaterialTheme.typography.titleMedium,
-                        color = Color.White
                     );
                 };
 
-                val date : DKDatePickerResponse = DKDatePicker(
-                    getMonthInteger(month),
-                    getYearInInt(year)
-                )
-
-                if(date.isDateSelected) {
                     var showDialog by remember { mutableStateOf(false) }
                     Column {
                         IconButton(onClick = { showDialog = true }) {
@@ -131,23 +123,20 @@ fun ExpandablePanel(
                                 contentDescription = "Open Form"
                             )
                         }
-
-                        Text(
-                            text = "Add expenses for ${date.date}"
-                        )
                     }
 
                     if (showDialog) {
                         Dialog(onDismissRequest = { showDialog = false }) {
 
                             DKCalendarPopup(
-                                date.date,
+                                month,
+                                year,
                                 dataStore,
                                 ENTRIES_KEY,
                                 onClose = { showDialog = false })
                         }
                     }
-                }
+
             }
         }
     }
