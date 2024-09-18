@@ -86,8 +86,8 @@ fun getYear(date: Date): String {
 }
 
 fun getDateFromMonth(date: String): String {
-    val day = SimpleDateFormat("DD", Locale.getDefault()).format(Date(date))
-    return day
+    val date = SimpleDateFormat("DD", Locale.getDefault()).format(Date(date))
+    return date
 }
 
 fun getDayFromMonth(date: String, format: String): String {
