@@ -84,20 +84,12 @@ fun SideNav() {
                         modifier = Modifier.padding(innerPadding)
                     ) {
                         composable("home") {
-//                    HomeScreen(
-//                        drawerState = drawerState,
-//                        onMenuClicked = {
-//                            scope.launch {
-//                                if (drawerState.isClosed) drawerState.open() else drawerState.close()
-//                            }
-//                        }
-//                    )
                             Scaffold(
                                 modifier = Modifier.fillMaxSize(),
                                 containerColor = Color.White, // Set background color here
                                 content = { innerPadding ->
                                     // Use Padding to make sure content is properly aligned
-                                    DashBoard(msg, Modifier.padding(innerPadding))
+                                    Home(Modifier.padding(innerPadding))
                                 }
                             )
                         }

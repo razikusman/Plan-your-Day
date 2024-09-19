@@ -77,6 +77,14 @@ fun parseDate(dateString: String, format: String = "dd/MM/yyyy"): Date {
     return dateFormat.parse(dateString) ?: Date() // Return current date if parsing fails
 }
 
+fun dkDefaultDateFormat(dateString: String, inputFormat: String, outputFormat: String = "dd/MM/yyyy"): String {
+    val dateFormat = SimpleDateFormat(inputFormat, Locale.getDefault())
+    val outputDateFormat = SimpleDateFormat(outputFormat, Locale.getDefault())
+
+    val date = dateFormat.parse(dateString) ?: return ""
+    return outputDateFormat.format(date)
+}
+
 fun getMonthInName(date: Date): String {
     val monthName = SimpleDateFormat("MMMM", Locale.getDefault()).format(date)
     return monthName
@@ -89,7 +97,7 @@ fun getYear(date: Date): String {
 
 fun getDateFromMonth(date: String): String {
 
-    val date = SimpleDateFormat("DD", Locale.getDefault()).format(parseDate(date))
+    val date = SimpleDateFormat("dd", Locale.getDefault()).format(parseDate(date))
     return date
 }
 

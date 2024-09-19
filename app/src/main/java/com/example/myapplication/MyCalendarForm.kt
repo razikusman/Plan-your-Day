@@ -26,9 +26,11 @@ import androidx.compose.ui.unit.dp
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import dkDefaultDateFormat
 import getMonthInteger
 import getYearInInt
 import kotlinx.serialization.Serializable
+import parseDate
 
 val Context.dataStore by preferencesDataStore(name = "myCalander")
 
@@ -55,11 +57,11 @@ fun MyCalendarForm(
     var allEntries = entries
 
     if(date != ""){
-        selectedDate = date
+        selectedDate = dkDefaultDateFormat(date, "yyyy-MM-dd");
     }
 
     if (allEntries != null && selectedDate != "") {
-        total = allEntries.filter { e -> e.date == selectedDate }.sumOf { e -> e.number.toInt() }
+        total = allEntries.filter { e -> dkDefaultDateFormat( e.date,"dd/MM/yyyy") == selectedDate }.sumOf { e -> e.number.toInt() }
     }
 
     Column(
@@ -213,7 +215,7 @@ fun MyCalendarForm(
                 .fillMaxWidth()
         ) {
             itemsIndexed(allEntries ?: emptyList()) { index, entry ->
-                if(entry.date == selectedDate) {
+                if(dkDefaultDateFormat(entry.date,"dd/MM/yyyy") == selectedDate) {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
