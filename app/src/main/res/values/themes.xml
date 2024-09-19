@@ -2,4 +2,9 @@
 <resources>
 
     <style name="Theme.MyApplication" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.MyApplication.Launcher" parent="android:Theme.Material.Light.NoActionBar.Fullscreen">
+
+<!--        <item name="android:windowBackground">@mipmap/logo_icon_round</item> &lt;!&ndash; Transparent background &ndash;&gt;-->
+    </style>
 </resources>
