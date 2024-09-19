@@ -38,7 +38,8 @@ fun MyCalendarForm(
     month: String,
     year: String = "2024",
     ENTRIES_KEY: Preferences.Key<String>,
-    dataStore: DataStore<Preferences>
+    dataStore: DataStore<Preferences>,
+    date: String
 ) {
 
     var calenderViewModel = MyCalenderViewModel(ds = dataStore);
@@ -53,6 +54,10 @@ fun MyCalendarForm(
     val entries by calenderViewModel.loadEntry(ENTRIES_KEY).collectAsState(initial = null);
     var allEntries = entries
 
+    if(date != ""){
+        selectedDate = date
+    }
+
     if (allEntries != null && selectedDate != "") {
         total = allEntries.filter { e -> e.date == selectedDate }.sumOf { e -> e.number.toInt() }
     }
@@ -64,11 +69,13 @@ fun MyCalendarForm(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp) // Space between elements
     ) {
-        val date : DKDatePickerResponse = DKDatePicker(
-            getMonthInteger(month),
-            getYearInInt(year)
-        )
-        selectedDate = date.date;
+        if(date == ""){
+            val dateFromPicker : DKDatePickerResponse = DKDatePicker(
+                getMonthInteger(month),
+                getYearInInt(year)
+            )
+            selectedDate = dateFromPicker.date;
+        }
         Text(
             text = "Selected Date: $selectedDate",
             style = MaterialTheme.typography.bodyLarge,

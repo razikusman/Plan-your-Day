@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.MaterialTheme
@@ -56,7 +55,8 @@ fun DKCalendar(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(0.5f)
+                .fillMaxHeight()
+                .weight(1f)
         ) {
             Text(
                 text = "${currentMonth.month} of $year",
@@ -91,8 +91,8 @@ fun DKCalendar(
         for (week in 0 until 6) {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
+                    .fillMaxHeight()
+                    .height(60.dp)
             ) {
                 daysOfWeek.withIndex().forEach { (index, day) ->
                     Column(
@@ -132,7 +132,7 @@ fun DKCalendar(
                         }
                     }
             };
-            }
+                }
         }
     }
 }
@@ -193,6 +193,7 @@ fun capitalizeString(word: String): String {
     return word.lowercase(Locale.ROOT).replaceFirstChar{it.uppercase()}
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
 fun testCalendar(){
