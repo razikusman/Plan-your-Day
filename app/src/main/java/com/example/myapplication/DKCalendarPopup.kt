@@ -29,6 +29,7 @@ fun DKCalendarPopup(
     year : String = "2024",
     dataStore: DataStore<Preferences>,
     ENTRIES_KEY: Preferences.Key<String>,
+    date: String,
     onClose: () -> Unit
 ) {
     Surface(
@@ -65,7 +66,8 @@ fun DKCalendarPopup(
                 month,
                 year,
                 ENTRIES_KEY,
-                dataStore)
+                dataStore,
+                date)
         }
     }
 }
@@ -86,7 +88,8 @@ fun getYear(date: Date): String {
 }
 
 fun getDateFromMonth(date: String): String {
-    val date = SimpleDateFormat("DD", Locale.getDefault()).format(Date(date))
+
+    val date = SimpleDateFormat("DD", Locale.getDefault()).format(parseDate(date))
     return date
 }
 
