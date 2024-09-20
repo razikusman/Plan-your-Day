@@ -96,8 +96,8 @@ fun getYear(date: Date): String {
 }
 
 fun getDateFromMonth(date: String): String {
-
     val date = SimpleDateFormat("dd", Locale.getDefault()).format(parseDate(date))
+
     return date
 }
 
