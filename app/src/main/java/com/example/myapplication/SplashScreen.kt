@@ -31,17 +31,17 @@ fun SplashScreen(onSplashFinished: () -> Unit){
     Surface(
         modifier = Modifier.fillMaxSize()
             .background(Color.LightGray),
-        color = Color.White,
+        color = Color(0xFF3CB4C0)
     ) {
         Box(
-            contentAlignment = Alignment.Center,
+            contentAlignment = Alignment.BottomCenter,
             modifier = Modifier.fillMaxSize(),
         ) {
             // Replace logo_inside with your drawable name
             Image(
-                painter = painterResource(id = R.drawable.logo_face),
+                painter = painterResource(id = R.drawable.splash_screen),
                 contentDescription = "App Logo",
-                modifier = Modifier.size(300.dp),
+                modifier = Modifier.size(400.dp),
                 contentScale = ContentScale.Crop
             )
         }
