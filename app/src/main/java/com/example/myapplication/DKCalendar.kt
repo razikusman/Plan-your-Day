@@ -11,13 +11,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -56,7 +56,8 @@ fun DKCalendar(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(0.5f)
+                .fillMaxHeight()
+                .weight(1f)
         ) {
             Text(
                 text = "${currentMonth.month} of $year",
@@ -91,48 +92,57 @@ fun DKCalendar(
         for (week in 0 until 6) {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
+                    .fillMaxHeight()
+                    .height(60.dp)
             ) {
                 daysOfWeek.withIndex().forEach { (index, day) ->
-                    Column(
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .weight(1f)
-                    ) {
-                        if(week == 0 && index < currentMonthStartingDayIndex) {
+                    if (week == 0 && index < currentMonthStartingDayIndex) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .weight(1f)
+                        ) {
                             Text(
                                 "${previousMonthLastDate - currentMonthStartingDayIndex + index + 1}",
-                                color = Color.LightGray
+                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f)
                             )
                         }
-                        else if(count > currentMonthLastDate){
+                    } else if (count > currentMonthLastDate) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .weight(1f)
+                        ) {
                             nextMonthBegin++
                             Text(
                                 "${nextMonthBegin}",
-                                color = Color.LightGray
+                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f)
                             )
                         }
-                        else{
-                            val currentCount = count
-
+                    } else {
+                        val currentCount = count;
+                        Column(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .weight(1f)
+                                .clickable {
+                                    onDateSelected(currentMonth.atDay(currentCount))
+                                }
+                        ) {
                             Text(
                                 text = "$currentCount",
-                                modifier = Modifier
-                                    .clickable {
-                                        onDateSelected(currentMonth.atDay(currentCount))
-                                    }
                             )
                             count++
 
-                            var currentDateContent = calendarContent.find { content -> content.date == currentCount}
-                            if(currentDateContent != null){
+                            var currentDateContent =
+                                calendarContent.find { content -> content.date == currentCount }
+                            if (currentDateContent != null) {
                                 DisplayDataWithDividers(currentDateContent.dataList)
                             }
                         }
                     }
+                }
             };
-            }
         }
     }
 }
@@ -193,6 +203,7 @@ fun capitalizeString(word: String): String {
     return word.lowercase(Locale.ROOT).replaceFirstChar{it.uppercase()}
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
 fun testCalendar(){

@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.datastore.core.DataStore
@@ -46,31 +47,25 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MyApplicationTheme {
-                var showSplash by remember { mutableStateOf(true) }
-
-                if (showSplash) {
-                    SplashScreen(onSplashFinished = {
-                        showSplash = false
-                    })
-                } else {
-                    SideNav()
-                }
+//                var showSplash by remember { mutableStateOf(true) }
+//
+//                if (showSplash) {
+//                    SplashScreen(onSplashFinished = {
+//                        showSplash = false
+//                    })
+//                } else {
+//                    SideNav()
+//                }
+                SideNav()
             }
         }
     }
 }
 
 @Composable
-fun DashBoard(message: Message, modifier: Modifier = Modifier) {
-    // Define the handleButtonClick function
-    fun handleButtonClick() {
-        // Handle the button click here
-        println("Button clicked!")
-    }
-
-    // Use Column to arrange items vertically
+fun Home(modifier: Modifier){
     Column(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize() // Fill the entire screen
             .padding(16.dp), // Add padding around the Column
         horizontalAlignment = Alignment.CenterHorizontally, // Center items horizontally
@@ -97,14 +92,21 @@ fun DashBoard(message: Message, modifier: Modifier = Modifier) {
                 .fillMaxWidth(), // Use fillMaxHeight and fillMaxWidth to ensure full space usage
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Button 1
-            DKButton(onClick = { handleButtonClick() }, Modifier.weight(1f), "Budget")
+            Text(
+                text = "Have a nice Day, Welcome you to PYD",
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.primary,
+                textAlign = TextAlign.Center
+            )
 
-            // Spacer to add a bit of space between the two buttons
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(24.dp)) // Add space between the image and button
 
-            // Button 2
-            DKButton(onClick = { handleButtonClick() }, Modifier.weight(1f), "Test")
+            Text(
+                text = "Plan Your Day",
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.primary,
+                textAlign = TextAlign.Center
+            )
         }
     }
 }

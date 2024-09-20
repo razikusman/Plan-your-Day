@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+<!--    <style name="Theme.MyApplication.Launcher" parent="android:Theme.Material.Light.NoActionBar.Fullscreen">-->
+<!--        <item name="android:windowSplashScreenIconBackgroundColor">@color/DkBLue</item>-->
+<!--        <item name="android:windowSplashScreenAnimatedIcon">@drawable/splash_screen</item>-->
+<!--        &lt;!&ndash;        <item name="android:windowBackground">@mipmap/logo_icon_round</item> &lt;!&ndash; Transparent background &ndash;&gt;&ndash;&gt;-->
+<!--    </style>-->
+</resources>

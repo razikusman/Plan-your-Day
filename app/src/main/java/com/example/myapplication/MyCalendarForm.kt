@@ -26,9 +26,11 @@ import androidx.compose.ui.unit.dp
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import dkDefaultDateFormat
 import getMonthInteger
 import getYearInInt
 import kotlinx.serialization.Serializable
+import parseDate
 
 val Context.dataStore by preferencesDataStore(name = "myCalander")
 
@@ -38,7 +40,8 @@ fun MyCalendarForm(
     month: String,
     year: String = "2024",
     ENTRIES_KEY: Preferences.Key<String>,
-    dataStore: DataStore<Preferences>
+    dataStore: DataStore<Preferences>,
+    date: String
 ) {
 
     var calenderViewModel = MyCalenderViewModel(ds = dataStore);
@@ -53,8 +56,12 @@ fun MyCalendarForm(
     val entries by calenderViewModel.loadEntry(ENTRIES_KEY).collectAsState(initial = null);
     var allEntries = entries
 
+    if(date != ""){
+        selectedDate = dkDefaultDateFormat(date, "yyyy-MM-dd");
+    }
+
     if (allEntries != null && selectedDate != "") {
-        total = allEntries.filter { e -> e.date == selectedDate }.sumOf { e -> e.number.toInt() }
+        total = allEntries.filter { e -> dkDefaultDateFormat( e.date,"dd/MM/yyyy") == selectedDate }.sumOf { e -> e.number.toInt() }
     }
 
     Column(
@@ -64,11 +71,13 @@ fun MyCalendarForm(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp) // Space between elements
     ) {
-        val date : DKDatePickerResponse = DKDatePicker(
-            getMonthInteger(month),
-            getYearInInt(year)
-        )
-        selectedDate = date.date;
+        if(date == ""){
+            val dateFromPicker : DKDatePickerResponse = DKDatePicker(
+                getMonthInteger(month),
+                getYearInInt(year)
+            )
+            selectedDate = dateFromPicker.date;
+        }
         Text(
             text = "Selected Date: $selectedDate",
             style = MaterialTheme.typography.bodyLarge,
@@ -206,7 +215,7 @@ fun MyCalendarForm(
                 .fillMaxWidth()
         ) {
             itemsIndexed(allEntries ?: emptyList()) { index, entry ->
-                if(entry.date == selectedDate) {
+                if(dkDefaultDateFormat(entry.date,"dd/MM/yyyy") == selectedDate) {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
